@@ -1,6 +1,11 @@
 body{
     background-color: #082032;
 }
+
+p {
+    color: #FF4C29;
+}
+
 .button {
 	color: #FF4C29;
 	background-color: #2C394B;

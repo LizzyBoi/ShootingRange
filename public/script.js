@@ -17,4 +17,9 @@ function updateSlider(){
     document.getElementById('currentSpeed').innerHTML = document.getElementById('speedInput').value
 }
 
+function incrementSlider(){
+    var increment = 5
+    document.getElementById('speedSlider').value = parseInt(document.getElementById('speedSlider').value) + increment
+}
+
     

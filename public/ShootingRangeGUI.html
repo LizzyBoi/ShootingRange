@@ -8,8 +8,11 @@
 </head>
 <body>
 	<div>
-		<input type="range" class="slider" min="0" max="200" id="speedSlider" value="0" step="5" orient="horizontal" oninput="currentSpeed.innerText = this.value">
-		<p id="currentSpeed">100</p>
+		<input type="range" class="speedSlider" min="0" max="200" id="speedSlider" value="0" step="5" orient="vertical" oninput="currentSpeed.innerText = this.value">
+		<p id="currentSpeed" class="speedSlider">100</p>
+	</div>
+	<div>
+		
 	
 		<div>
 			<label class="generalText" for="fname">Pick Discrete Speed:</label><br>
@@ -20,9 +23,9 @@
 	</div>
 
 	<div>
-		<input type="button" class="triButtonUp" id="triButtonUp">
+		<input type="button" class="triButtonUp" id="triButtonUp" onclick="incrementSlider()">
 		<br>
-		<input type="button" class="triButtonDown" id="triButtonDown">
+		<input type="button" class="triButtonDown" id="triButtonDown" onclick="incrementSlider()">
 	</div>
 </body>
 

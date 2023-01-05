@@ -15,10 +15,8 @@ ws_server.on('connection', (ws) => {
 		const message = JSON.parse(messageString);
 
 		if (message.command === "change") {
-			console.log("change");
 			change_duty_cycle(message.value);
 		} else if (message.command === "set") {
-			console.log("set");
 			set_duty_cycle(message.value);
 		}
 	});
@@ -33,7 +31,7 @@ var app = express()
 	.listen(port, () => {console.log(`Listening on port ${port}`)});
 
 var pwm_output = [];
-for (const gpio of [6,13,19,26,12,16,20,21]) {
+for (const gpio of [6,13,19,26,12,16]) {
 	pwm_output.push(new Gpio(gpio, 'out'));	
 }
 
@@ -61,7 +59,7 @@ function set_duty_cycle(new_duty_cycle) {
 }
 
 function pwmDutyCycle(duty_cycle) {
-	for (var i = 0; i < 8; i++) {
+	for (var i = 0; i < pwm_output.length; i++) {
 		var mask = 1 << i;
 		if (duty_cycle & mask) {
 			pwm_output[i].writeSync(1);

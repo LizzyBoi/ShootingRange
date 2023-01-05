@@ -20,9 +20,8 @@ let ws;
 })();
 
 window.onload = function(){
-    const el = document.getElementById("speedInput");
-    console.log(el);
-    el.addEventListener("keyup", function(event) {
+    document.getElementById("speedInput")
+    .addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
             document.getElementById("speedInputButton").click();
@@ -32,9 +31,20 @@ window.onload = function(){
 
 
 
-function updateSlider(){
+function updateSpeed(){
+    if(document.getElementById('speedInput').value > -1 && document.getElementById('speedInput').value < 64){
     document.getElementById('speedSlider').value = document.getElementById('speedInput').value;
     document.getElementById('currentSpeed').innerHTML = document.getElementById('speedInput').value;
+    document.getElementById('speedInput').value = NaN;  
+    } else {
+    document.getElementById('speedInput').value = NaN;   
+    }
+}
+
+function incrementSlider(x){
+    var scalar = 2
+    document.getElementById('speedSlider').value = document.getElementById('currentSpeed').innerHTML;
+    document.getElementById('currentSpeed').innerHTML = parseInt(document.getElementById('currentSpeed').innerHTML) + scalar * x;
 }
 
 function onSliderInput() {

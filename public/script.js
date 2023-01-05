@@ -35,9 +35,9 @@ function updateSpeed(){
     if(document.getElementById('speedInput').value > -1 && document.getElementById('speedInput').value < 64){
     document.getElementById('speedSlider').value = document.getElementById('speedInput').value;
     document.getElementById('currentSpeed').innerHTML = document.getElementById('speedInput').value;
-    document.getElementById('speedInput').value = NaN;  
+    document.getElementById('speedInput').value = "";  
     } else {
-    document.getElementById('speedInput').value = NaN;   
+    document.getElementById('speedInput').value = "";   
     }
 }
 

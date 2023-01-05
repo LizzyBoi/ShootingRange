@@ -1,11 +1,11 @@
 body{
-    background-color: #082032;
+  background-color: #082032;
 }
 
 p {
-    color: #FF4C29;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-size: 30px;
+  color: #FF4C29;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 30px;
 }
 
 .generalText{
@@ -23,11 +23,10 @@ p {
 	padding: 10px 10px;
   margin-bottom: 10px;
 	cursor: pointer;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 .button:hover {
-    color: #FF4C29;
+  color: #FF4C29;
 	background-color: #334756;
 }
 
@@ -45,46 +44,43 @@ p {
 }
 
 .submit{
-    background-color: #2C394B;
-    color: #FF4C29;
+  background-color: #2C394B;
+  color: #FF4C29;
 }
 
 /* removes arrows from submit field*/
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 /* Triangle buttons: */
 .triButtonUp{
-    border-color: transparent transparent #d1d5db;
-    border-width: 0 2rem 3rem;
-    border-style: solid;
-
-    /* Size */
-    height: 0px;
-    width: 0px;
-    padding: 0.3px;
-    background-color: transparent;
-    
+  border-color: transparent transparent #d1d5db;
+  border-width: 0 2rem 3rem;
+  border-style: solid;
+  /* Size */
+  height: 0px;
+  width: 0px;
+  padding: 0.3px;
+  background-color: transparent;
 }
 
 .triButtonDown{
-    border-color: transparent transparent #d1d5db;
-    border-width: 0rem 2rem 3rem;
-    border-style: solid;
-    transform: rotate(180deg);
-
-    height: 0px;
-    width: 0px;
-    padding: 0px;
-    background-color: transparent;
+  border-color: transparent transparent #d1d5db;
+  border-width: 0rem 2rem 3rem;
+  border-style: solid;
+  transform: rotate(180deg);
+  height: 0px;
+  width: 0px;
+  padding: 0px;
+  background-color: transparent;
 }
 
 .triButtonUp:hover{
-    border-color:transparent transparent #FF4C29;
+  border-color:transparent transparent #FF4C29;
 }
  
 .triButtonDown:hover{
-    border-color:transparent transparent #FF4C29;
+  border-color:transparent transparent #FF4C29;
 }

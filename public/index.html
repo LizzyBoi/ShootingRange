@@ -8,11 +8,8 @@
 </head>
 <body>
 	<div>
-		<input type="range" class="speedSlider" min="0" max="200" id="speedSlider" value="0" step="5" orient="vertical" oninput="currentSpeed.innerText = this.value">
-		<p id="currentSpeed" class="speedSlider">100</p>
-	</div>
-	<div>
-		
+		<input type="range" class="slider" min="0" max="63" id="speedSlider" value="0" step="1" orient="horizontal" oninput="onSliderInput()">
+		<p id="currentSpeed">100</p>
 	
 		<div>
 			<label class="generalText" for="fname">Pick Discrete Speed:</label><br>

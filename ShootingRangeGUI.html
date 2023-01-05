@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="style.css">
+	<script src="script.js"></script>
+	<title>HTML Button Generator</title>
+	
+</head>
+<body>
+	<div>
+		<input type="range" class="slider" min="0" max="200" id="speedSlider" value="0" step="5" orient="horizontal" oninput="currentSpeed.innerText = this.value">
+		<p id="currentSpeed">100</p>
+	
+		<div>
+			<label class="generalText" for="fname">Pick Discrete Speed:</label><br>
+			<input class="submit" type="number" id="speedInput"><br>
+			<input type="button" onclick="updateSlider()" value="update" class="button" id="speedInputButton">
+		</div>
+
+	</div>
+
+	<div>
+		<input type="button" class="triButtonUp" id="triButtonUp">
+		<br>
+		<input type="button" class="triButtonDown" id="triButtonDown">
+	</div>
+</body>
+
+</html>

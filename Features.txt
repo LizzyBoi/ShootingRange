@@ -1,0 +1,13 @@
+Motor speed
+ - Sliders that allow precision controls with buttons
+ - Display that shows current speed
+ - Text input of wanted speed
+ - (Acceleration control)
+Motor direction
+ - Button to control direciton
+ - Display showing current direction
+ - 
+Position
+ - Set position of shotting target
+(Show Motor current draw)
+

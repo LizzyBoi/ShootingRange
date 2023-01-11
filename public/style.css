@@ -2,6 +2,11 @@ body{
   background-color: #082032;
 }
 
+.PWMControl {
+  position: absolute;
+  transform: translate(250px, -400px);
+}
+
 p {
   color: #FF4C29;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -30,17 +35,49 @@ p {
 	background-color: #334756;
 }
 
+.halt {
+  transform: translate(110px, 0px);
+}
+
 .speedText{
   position: absolute;
   margin-top: 70px;
   margin-left: 120px;
 }
 
-.speedSlider{
+.slider{
   position: absolute;
+  -webkit-appearance: slider-vertical
+}
+
+.speedSlider{
   transform: translate(100%,0%);
   height: 215px;
-  -webkit-appearance: slider-vertical
+}
+
+.positionSlider{
+  transform: translate(-40px,0px);
+  height: 400px;
+}
+
+.positionSubmit{
+  position: absolute;
+  transform: translate(70px, -413px);
+}
+
+datalist {
+  display: flex;
+  justify-content: space-evenly;
+  writing-mode: vertical-lr;
+  width: 10px;
+  color: #FF4C29;
+  line-height: 13px;
+
+}
+
+.distance {
+  margin: 0px 0px 23px 0px;
+  transform: translate(40px, 6px);
 }
 
 .submit{
@@ -55,6 +92,16 @@ p {
   margin: 0;
 }
 /* Triangle buttons: */
+.incrementDiv{
+  position: absolute;
+  transform: translate(80px, -300px);
+}
+
+.incrementDir{
+  position: absolute;
+  transform: translate(90px, -105px);
+}
+
 .triButtonUp{
   border-color: transparent transparent #d1d5db;
   border-width: 0 2rem 3rem;
@@ -83,4 +130,8 @@ p {
  
 .triButtonDown:hover{
   border-color:transparent transparent #FF4C29;
+}
+.positionControl{
+  height: 400px;
+  
 }

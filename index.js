@@ -21,7 +21,7 @@ ws_server.on('connection', (ws) => {
 		}
 	});
 
-	ws.on('close', () => console.log('Client has disconnected'));
+	ws.on('close', () => {console.log('Client has disconnected')});
 });
 
 

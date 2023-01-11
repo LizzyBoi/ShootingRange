@@ -7,22 +7,53 @@
 	
 </head>
 <body>
+	<div class="positionControl">
+		<input type="range" class="slider positionSlider" min="0" max="90" value="0" step="2" orient="vertical", list="distance" id="positionSlider" oninput="onSliderInput('positionValue', 'positionSlider')">
+		<datalist id="distance">
+			<option class="distance" value="90" label="90"></option>
+			<option class="distance" value="80" label="80"></option>
+			<option class="distance" value="70" label="70"></option>
+			<option class="distance" value="60" label="60"></option>
+			<option class="distance" value="50" label="50"></option>
+			<option class="distance" value="40" label="40"></option>
+			<option class="distance" value="30" label="30"></option>
+			<option class="distance" value="20" label="20"></option>
+			<option class="distance" value="10" label="10"></option>
+			<option class="distance" value="0" label="0"></option>
+		</datalist>
+		<div class="positionSubmit">
+			<label class="generalText positionControlText" for="fname">Go to position:</label><br>
+			<br>
+			<input class="submit" type="number" id="positionInput"><br>
+			<input type="button" onclick="updateSubmit('positionInput', 'positionValue', 'positionSlider', 0, 90)" value="update" class="button" id="positionSubmitButton">
+			<p id="positionValue" style="transform: translate(110px, -76px);">0</p>
+		</div>
+			<div class="incrementDiv">
+				<input type="button" class="triButtonUp" id="triButtonUp" onclick="incrementSlider(1, 'positionValue', 'positionSlider', 0, 90)">
+				<br>
+				<input type="button" class="triButtonDown" id="triButtonDown" onclick="incrementSlider(-1, 'positionValue', 'positionSlider', 0, 90)">
+				<div class="incrementDir">
+					<input type="button" class="triButtonUp" id="triDirUp" onclick="incrementDir('triDirUp', 'triDirDown', 1)">
+					<br>
+					<input type="button" class="triButtonDown" id="triDirDown" onclick="incrementDir('triDirDown', 'triDirUp', 0)">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="PWMControl">
 	<div>
-		<input type="range" class="speedSlider" min="0" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput()">
+		<input type="range" class="slider speedSlider" min="0" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput('currentSpeed', 'speedSlider')">
 		<p id="currentSpeed" class="speedText">32</p>
 	
 		<div>
 			<label class="generalText" for="fname">Pick Discrete Speed:</label><br>
 			<br>
 			<input class="submit" type="number" id="speedInput"><br>
-			<input type="button" onclick="updateSpeed()" value="update" class="button" id="speedInputButton">
+			<input type="button" onclick="updateSubmit('speedInput', 'currentSpeed', 'speedSlider', 0, 63)" value="update" class="button" id="speedInputButton">
 		</div>
 	</div>
-
-	<div>
-		<input type="button" class="triButtonUp" id="triButtonUp" onclick="incrementSlider(1)">
-		<br>
-		<input type="button" class="triButtonDown" id="triButtonDown" onclick="incrementSlider(-1)">
-	</div>
+	<input type="button" class="button halt" value="Halt" onclick="halt()">
+    </div>
 </body>
 </html>

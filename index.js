@@ -21,7 +21,7 @@ ws_server.on('connection', (ws) => {
 		}
 	});
 
-	ws.on('close', () => console.log('Client has disconnected'));
+	ws.on('close', () => {console.log('Client has disconnected')});
 });
 
 
@@ -37,7 +37,7 @@ for (const gpio of [6,13,19,26,12,16]) {
 
 var disc_position = 0;
 var disc_sensor = new Gpio(17, 'in', 'both');
-var disc_sensor_dir = new Gpio(27, 'in', 'both');
+var disc_sensor_dir = new Gpio(27, 'in');
 disc_sensor.watch(disc_sensor_trigger);
 
 var curr_duty_cycle = 0;
@@ -72,7 +72,7 @@ function pwmDutyCycle(duty_cycle) {
 function disc_sensor_trigger(err, value) {
 	if(value === disc_sensor_dir.readSync()) {
 		console.log("posistive direction");
-		disc_position--;
+		disc_position++;
 	} else {
 		console.log("negative direction");
 		disc_position--;

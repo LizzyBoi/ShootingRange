@@ -27,39 +27,61 @@ window.onload = function(){
             document.getElementById("speedInputButton").click();
         }
     });
+	document.getElementById("positionInput")
+    .addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("positionSubmitButton").click();
+        }
+    });
 };
 
+function updateSubmit(input, value, slider, min, max){
+    if(document.getElementById(input).value >= min && document.getElementById(input).value <= max){
+        document.getElementById(slider).value = document.getElementById(input).value;
+        document.getElementById(value).innerHTML = document.getElementById(input).value;
+        document.getElementById(input).value = "";  
 
-
-function updateSpeed(){
-    if(document.getElementById('speedInput').value > -1 && document.getElementById('speedInput').value < 64){
-        document.getElementById('speedSlider').value = document.getElementById('speedInput').value;
-        document.getElementById('currentSpeed').innerHTML = document.getElementById('speedInput').value;
-        document.getElementById('speedInput').value = "";  
-
-        const value = parseInt(document.getElementById('currentSpeed').innerText);
-	    const message = {command: "set", value: value};
-	    ws.send(JSON.stringify(message));
+    	sendPublicToSocket(value)
     } else {
-        document.getElementById('speedInput').value = "";   
+        document.getElementById(input).value = "";   
     }
-
 }
 
-function incrementSlider(x){
-    var scalar = 2
-    document.getElementById('speedSlider').value = document.getElementById('currentSpeed').innerHTML;
-    document.getElementById('currentSpeed').innerHTML = parseInt(document.getElementById('currentSpeed').innerHTML) + scalar * x;
-    
-    const value = parseInt(document.getElementById('currentSpeed').innerText);
-	const message = {command: "set", value: value};
-	ws.send(JSON.stringify(message));
+function halt(){
+	document.getElementById('currentSpeed').innerHTML = 32;
+	document.getElementById('speedSlider').value = document.getElementById('currentSpeed').innerHTML;
+
+	sendPublicToSocket('currentSpeed');
 }
 
-function onSliderInput() {
-	document.getElementById('currentSpeed').innerText = document.getElementById('speedSlider').value;
+function incrementSlider(x, value, slider, min, max){
+    var scalar = 10
+	var previousValue = parseInt(document.getElementById(value).innerHTML)
+	if(parseInt(document.getElementById(value).innerHTML) >= min && parseInt(document.getElementById(value).innerHTML)  <= max){
+    	document.getElementById(value).innerHTML = parseInt(document.getElementById(value).innerHTML) + scalar * x;
+    	document.getElementById(slider).value = document.getElementById(value).innerHTML;
+	}
+	if(parseInt(document.getElementById(value).innerHTML) < min || parseInt(document.getElementById(value).innerHTML)  > max){
+		document.getElementById(value).innerHTML = previousValue;
+	}
+    sendPublicToSocket(value);
+}
 
-	const value = parseInt(document.getElementById('currentSpeed').innerText);
+function incrementDir(id, altId, dir){
+
+	document.getElementById(id).style.borderColor = 'transparent transparent #FF4C29';
+	document.getElementById(altId).style.borderColor = 'transparent transparent #d1d5db';
+}
+
+function onSliderInput(value, slider) {
+	document.getElementById(value).innerText = document.getElementById(slider).value;
+
+	sendPublicToSocket(value);
+}
+
+function sendPublicToSocket(elemID) {
+	const value = parseInt(document.getElementById(elemID).innerText);
 	const message = {command: "set", value: value};
 	ws.send(JSON.stringify(message));
 }

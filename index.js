@@ -35,12 +35,16 @@ for (const gpio of [6,13,19,26,12,16]) {
 	pwm_output.push(new Gpio(gpio, 'out'));	
 }
 
-var disc_position = 0;
-var disc_sensor = new Gpio(20, 'in', 'both');
-var disc_sensor_dir = new Gpio(21, 'in');
-disc_sensor.watch(disc_sensor_trigger);
+var rotation_index = 0;
+var  rotation_signal = new Gpio(20, 'in', 'both');
+var direction_signal = new Gpio(21, 'in');
+rotation_signal.watch(rotation_signal_trigger);
 
 var curr_duty_cycle = 0;
+
+function send_to_frontend(object) {
+	ws.send(JSON.stringify(object));
+}
 
 function change_duty_cycle(change_by) {
 	curr_duty_cycle = curr_duty_cycle + change_by;
@@ -70,11 +74,15 @@ function pwmDutyCycle(duty_cycle) {
 }
 
 function disc_sensor_trigger(err, value) {
-	if(value === disc_sensor_dir.readSync()) {
-		disc_position++;
-		console.log(`posistive direction: ${disc_position}`);
-	} else {
-		disc_position--;
-		console.log(`negative direction: ${disc_position}`);
+	const direction = direction_signal.readSync() 
+
+	if(direction === 1) {
+		console.log("posistive direction");
+		rotation_index++;
+	} else if (direction === 0) {
+		console.log("negative direction");
+		rotation_index--;
 	}
+
+	ws.send({command: "rot", value: rotation_index});
 }

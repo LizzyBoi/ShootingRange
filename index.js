@@ -7,10 +7,12 @@ const port = 3000;
 
 
 const ws_server = new Server({ port: 7071 });
+let frontend_ws;
 
 ws_server.on('connection', (ws) => {
 	console.log('New client connected');
 
+	frontend_ws = ws;
 	ws.on('message', (messageString) => {
 		const message = JSON.parse(messageString);
 
@@ -43,7 +45,7 @@ rotation_signal.watch(rotation_signal_trigger);
 var curr_duty_cycle = 0;
 
 function send_to_frontend(object) {
-	ws.send(JSON.stringify(object));
+	frontend_ws.send(JSON.stringify(object));
 }
 
 function change_duty_cycle(change_by) {
@@ -73,16 +75,14 @@ function pwmDutyCycle(duty_cycle) {
 	}
 }
 
-function disc_sensor_trigger(err, value) {
+function rotation_signal_trigger(err, value) {
 	const direction = direction_signal.readSync() 
 
 	if(direction === 1) {
-		console.log("posistive direction");
 		rotation_index++;
+		console.log(rotation_index);
 	} else if (direction === 0) {
-		console.log("negative direction");
 		rotation_index--;
+		console.log(rotation_index);
 	}
-
-	ws.send({command: "rot", value: rotation_index});
 }

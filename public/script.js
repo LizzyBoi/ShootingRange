@@ -3,7 +3,15 @@ let ws;
 	ws = await connectToServer();
 
 	ws.onmessage = (wsMessage) => {
-		console.log('recieved message');
+		console.log(wsMessage.data);
+		msg_obj = JSON.parse(wsMessage.data);
+
+		console.log(msg_obj);
+		
+		if(msg_obj.command === "rot") {
+			console.log(msg_obj.value);
+			document.getElementById("positionValue").innerText = msg_obj.value;
+		};
 	};
 
 	async function connectToServer() {

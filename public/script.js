@@ -3,7 +3,24 @@ let ws;
 	ws = await connectToServer();
 
 	ws.onmessage = (wsMessage) => {
-		console.log('recieved message');
+		console.log(wsMessage.data);
+		msg_obj = JSON.parse(wsMessage.data);
+
+		console.log(msg_obj);
+		
+		if(msg_obj.command === "rot") {
+			console.log(msg_obj.value);
+			document.getElementById("positionValue").innerText = msg_obj.value;
+		} else if(msg_obj.command === "dir"){
+			console.log(msg_obj.value);
+			document.getElementById("motorDir").value = msg_obj.value;
+			// here motorDir is just a hidden input value in the html code that keeps track of direction with 1=forward -1=backward 0=still
+			updateDir()
+		} else if(msg_obj.command === "lerp") {
+			console.log(msg_obj.value);
+			document.getElementById("lerpValue").innerHTML = msg_obj.value
+			document.getElementById("lerpTempSlider").innerHTML = msg_obj.value
+		}
 	};
 
 	async function connectToServer() {
@@ -68,10 +85,22 @@ function incrementSlider(x, value, slider, min, max){
     sendPublicToSocket(value);
 }
 
-function incrementDir(id, altId, dir){
+function incrementDir(dir){
+	document.getElementById("motorDir").value = dir;
+	updateDir();
+}
 
-	document.getElementById(id).style.borderColor = 'transparent transparent #FF4C29';
-	document.getElementById(altId).style.borderColor = 'transparent transparent #d1d5db';
+function updateDir(){
+	if(parseInt(document.getElementById("motorDir").value) === 1){
+		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #FF4C29';
+		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #d1d5db';
+	} else if (parseInt(document.getElementById("motorDir").value) === -1){
+		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #FF4C29';
+		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #d1d5db';
+	} else {
+		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #d1d5db';
+		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #d1d5db';
+	}
 }
 
 function onSliderInput(value, slider) {

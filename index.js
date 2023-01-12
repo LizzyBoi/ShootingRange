@@ -8,10 +8,12 @@ const port = 3000;
 
 
 const ws_server = new Server({ port: 7071 });
+let frontend_ws;
 
 ws_server.on('connection', (ws) => {
 	console.log('New client connected');
 
+	frontend_ws = ws;
 	ws.on('message', (messageString) => {
 		const message = JSON.parse(messageString);
 
@@ -37,18 +39,19 @@ var pwm_output = [];
 for (const gpio of [6,13,19,26,12,16]) {
 	pwm_output.push(new Gpio(gpio, 'out'));	
 }
-var curr_duty_cycle = 0;
+var curr_duty_cycle = 32;
 
 var rotation_index = 0;
-const rotation_signal = new Gpio(17, 'in', 'both');
-const direction_signal = new Gpio(27, 'in');
-disc_sensor.watch(rotation_signal_trigger);
 
 const enable_signal = new Gpio(25, 'out');
 var enabled = 0;
 
+var  rotation_signal = new Gpio(20, 'in', 'both');
+var direction_signal = new Gpio(21, 'in');
+rotation_signal.watch(rotation_signal_trigger);
+
 function send_to_frontend(object) {
-	ws.send(JSON.stringify(object));
+	frontend_ws.send(JSON.stringify(object));
 }
 
 function brake_motor() {
@@ -89,17 +92,16 @@ function pwmDutyCycle(duty_cycle) {
 	}
 }
 
-function disc_sensor_trigger(err, value) {
+function rotation_signal_trigger(err, value) {
 	const direction = direction_signal.readSync() 
-	if(direction === 1) {
-		console.log("posistive direction");
-		rotation_index++;
-	} else if (direction === 0) {
-		console.log("negative direction");
-		rotation_index--;
-	}
 
-	ws.send({command: "rot", value: rotation_index});
+	if(direction === 1) {
+		rotation_index++;
+		console.log(rotation_index);
+	} else if (direction === 0) {
+		rotation_index--;
+		console.log(rotation_index);
+	}
 }
 
 //ramp up

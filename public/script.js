@@ -1,5 +1,3 @@
-const { stringify } = require("querystring");
-
 let ws;
 (async function() {
 	ws = await connectToServer();

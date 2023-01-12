@@ -1,3 +1,5 @@
+const { stringify } = require("querystring");
+
 let ws;
 (async function() {
 	ws = await connectToServer();
@@ -68,8 +70,9 @@ function updateSubmit(input, value, slider, min, max, command){
 function halt(command){
 	document.getElementById('currentSpeed').innerHTML = 32;
 	document.getElementById('speedSlider').value = document.getElementById('currentSpeed').innerHTML;
+	
+	sendPublicToSocket(command, 32);
 
-	sendPublicToSocket(command, parseInt('currentSpeed'));
 }
 
 function incrementSlider(x, value, slider, min, max, command){

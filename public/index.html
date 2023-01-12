@@ -33,9 +33,9 @@
 				<br>
 				<input type="button" class="triButtonDown" id="triButtonDown" onclick="incrementSlider(-1, 'positionValue', 'positionSlider', 0, 90)">
 				<div class="incrementDir">
-					<input type="button" class="triButtonUp" id="triDirUp" onclick="incrementDir('triDirUp', 'triDirDown', 1)">
+					<input type="button" class="triButtonUp" id="triDirUp" onclick="incrementDir(1)">
 					<br>
-					<input type="button" class="triButtonDown" id="triDirDown" onclick="incrementDir('triDirDown', 'triDirUp', 0)">
+					<input type="button" class="triButtonDown" id="triDirDown" onclick="incrementDir(-1)">
 				</div>
 			</div>
 		</div>
@@ -55,5 +55,8 @@
 	</div>
 	<input type="button" class="button halt" value="Halt" onclick="halt()">
     </div>
+	<div>
+		<input type="hidden" id="motorDir" value="0">
+	</div>
 </body>
 </html>

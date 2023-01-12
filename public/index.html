@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div class="positionControl">
-		<input type="range" class="slider positionSlider" min="0" max="90" value="0" step="2" orient="vertical", list="distance" id="positionSlider" oninput="onSliderInput('positionValue', 'positionSlider')">
+		<input type="range" class="slider positionSlider" min="0" max="90" value="0" step="2" orient="vertical", list="distance" id="positionSlider" oninput="onSliderInput('goto', 'positionValue', 'positionSlider')">
 		<datalist id="distance">
 			<option class="distance" value="90" label="90"></option>
 			<option class="distance" value="80" label="80"></option>
@@ -43,7 +43,7 @@
 
 	<div class="PWMControl">
 	<div>
-		<input type="range" class="slider speedSlider" min="0" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput('currentSpeed', 'speedSlider')">
+		<input type="range" class="slider speedSlider" min="0" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput('set', 'currentSpeed', 'speedSlider')">
 		<p id="currentSpeed" class="speedText">32</p>
 	
 		<div>

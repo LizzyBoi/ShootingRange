@@ -1,7 +1,6 @@
 const express = require('express');
 const { Server } = require('ws');
 const Gpio = require('onoff').Gpio;
-const lerp = require('lerp');
 
 const hostname = "127.0.0.1";
 const port = 3000;
@@ -43,7 +42,7 @@ var curr_duty_cycle = 32;
 
 var rotation_index = 0;
 
-const enable_signal = new Gpio(25, 'out');
+const enable_signal = new Gpio(7, 'out');
 var enabled = 0;
 
 var  rotation_signal = new Gpio(20, 'in', 'both');
@@ -55,21 +54,23 @@ function send_to_frontend(object) {
 }
 
 function brake_motor() {
+	enabled = 0;
 	enable_signal.writeSync(0);	
 	set_duty_cycle(0);
 }
 
 function enable_motor() {
+	enabled = 1;
 	enable_signal.writeSync(1);
 	set_duty_cycle(32);
 }
 
 function change_duty_cycle(change_by) {
 	curr_duty_cycle = curr_duty_cycle + change_by;
-	if (curr_duty_cycle < 0) {
-		curr_duty_cycle = 0;
-	} else if (curr_duty_cycle > 255) {
-		curr_duty_cycle = 255;
+	if (curr_duty_cycle < 1) {
+		curr_duty_cycle = 1;
+	} else if (curr_duty_cycle > 63) {
+		curr_duty_cycle = 63;
 	}
 
 	pwmDutyCycle(curr_duty_cycle);
@@ -106,40 +107,55 @@ function rotation_signal_trigger(err, value) {
 
 //ramp up
 //Idea: take error, and current speed, do some magic with that to either increase or decrease motor speed.
+var interval;
+var running = 0;
 
 function go_to_position(end_position) {
 	console.log(`${Date.now()}\t${curr_duty_cycle}`);
-	while(1) {
-		set_pwm_controller(end_position);
-		console.log(`${Date.now()}\t${curr_duty_cycle}`);
+	if (running) {
+		clearInterval(interval);
+	} else {
+		running = 1;
 	}
+
+	interval = setInterval(set_pwm_controller, 10, end_position);
 }
 
+var reached_position = 0;
 function set_pwm_controller (end_position){
 	//TODO
 	//convert rotation_index to cm
 	//acutally set enable signal low for breaking
-	const curr_position = rotation_index / 7.5;
-	const leeway = 0.2;
+	const pulse_per_rotation = 4;
+	const rotation_per_cm = 7.5;
+	const curr_position = rotation_index / pulse_per_rotation / rotation_per_cm;
+	const deceleration_distance = 5;
+	if (reached_position) leeway = 0.3;
+	else leeway = 0.2;
+
+	if(end_position + leeway > curr_position && end_position - leeway < curr_position) {
+		console.log("reached approx position");
+		reached_position = 1;
+		set_duty_cycle(32);
+	}
 	
-	if(rotation_index != end_position && !enabled) {
-		enable_motor();
-	}
+	var pwm_modifier = (end_position - curr_position) / deceleration_distance;
+	if (pwm_modifier < -1) pwm_modifier = -1;
+	else if (pwm_modifier > 1) pwm_modifier = 1;
+	var pwm_to_send = 32 + Math.ceil(25 * pwm_modifier);
+	if (pwm_to_send > 32 && pwm_to_send < 35) pwm_to_send = 35;
+	if (pwm_to_send > 29 && pwm_to_send < 32) pwm_to_send = 29;
 
-	if (curr_position - leeway < end_position) {
-		set_duty_cycle(curr_duty_cycle++);
-	} else if (curr_position + leeway > end_position) {
-		set_duty_cycle(curr_duty_cycle--);
-	} else {
-		brake_motor();
-		set_duty_cycle(0);
-	}
+	var pwm_diff = pwm_to_send - curr_duty_cycle;
+	if(pwm_diff > 5) pwm_diff = 5;
+	else if(pwm_diff < -5) pwm_diff = -5;
+	
+	change_duty_cycle(pwm_diff);
 
+	console.log(`${Date.now()}\t${curr_duty_cycle}`);
 }
 
 
-brake_motor();
 
 
-
-
+set_duty_cycle(32);

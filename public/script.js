@@ -103,14 +103,15 @@ function updateDir(){
 	}
 }
 
-function onSliderInput(value, slider) {
+function onSliderInput(command, value, slider) {
 	document.getElementById(value).innerText = document.getElementById(slider).value;
 
-	sendPublicToSocket(value);
+	sendPublicToSocket(command, value);
 }
 
-function sendPublicToSocket(elemID) {
+
+function sendPublicToSocket(command, elemID) {
 	const value = parseInt(document.getElementById(elemID).innerText);
-	const message = {command: "set", value: value};
+	const message = {command: command, value: value};
 	ws.send(JSON.stringify(message));
 }

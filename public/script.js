@@ -16,6 +16,10 @@ let ws;
 			document.getElementById("motorDir").value = msg_obj.value;
 			// here motorDir is just a hidden input value in the html code that keeps track of direction with 1=forward -1=backward 0=still
 			updateDir()
+		} else if(msg_obj.command === "lerp") {
+			console.log(msg_obj.value);
+			document.getElementById("lerpValue").innerHTML = msg_obj.value
+			document.getElementById("lerpTempSlider").innerHTML = msg_obj.value
 		}
 	};
 

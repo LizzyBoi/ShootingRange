@@ -55,8 +55,14 @@
 	</div>
 	<input type="button" class="button halt" value="Halt" onclick="halt()">
     </div>
-	<div>
-		<input type="hidden" id="motorDir" value="0">
-	</div>
+	<br>
+	<input type="range" id="lerpTempSlider" min="0" max="100" value="0">
+	<p id="lerpValue">0</p>
+
+	<!-- hidden values -->
+	<input type="hidden" id="motorDir" value="0">
+	<input type="hidden" id="targetPosition" value="0">
+	<input type="hidden" id="currentPwm" value="0">
+
 </body>
 </html>

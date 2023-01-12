@@ -42,7 +42,7 @@ var  rotation_signal = new Gpio(20, 'in', 'both');
 var direction_signal = new Gpio(21, 'in');
 rotation_signal.watch(rotation_signal_trigger);
 
-var curr_duty_cycle = 0;
+var curr_duty_cycle = 32;
 
 function send_to_frontend(object) {
 	frontend_ws.send(JSON.stringify(object));

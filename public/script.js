@@ -72,6 +72,14 @@ function halt(){
 	sendPublicToSocket('set', 'currentSpeed');
 }
 
+function startButton(){
+	sendPublicToSocket('start');
+}
+
+function stopButton(){
+	sendPublicToSocket('stop')
+}
+
 function incrementSlider(x, id, slider, min, max, command){
     var scalar = 10
 	var previousValue = parseInt(document.getElementById(id).innerHTML)

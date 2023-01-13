@@ -39,6 +39,10 @@ p {
   transform: translate(110px, 0px);
 }
 
+.gonogo{
+  transform: translate(80px, -180px);
+}
+
 .speedText{
   position: absolute;
   margin-top: 70px;

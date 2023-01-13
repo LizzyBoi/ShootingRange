@@ -36,7 +36,7 @@ var app = express()
 
 var pwm_output = [];
 for (const gpio of [6,13,19,26,12,16]) {
-	pwm_output.push(new Gpio(gpio, 'out'));	
+	pwm_output.push(new gpio(gpio, 'out'));	
 }
 var curr_duty_cycle = 32;
 
@@ -118,18 +118,17 @@ function go_to_position(end_position) {
 		running = 1;
 	}
 
-	interval = setInterval(set_pwm_controller, 10, end_position);
+	interval = setInterval(set_pwm_controller, 250, end_position);
 }
 
 var reached_position = 0;
 function set_pwm_controller (end_position){
 	//TODO
-	//convert rotation_index to cm
 	//acutally set enable signal low for breaking
-	const pulse_per_rotation = 4;
+	const pulse_per_rotation = 2;
 	const rotation_per_cm = 7.5;
 	const curr_position = rotation_index / pulse_per_rotation / rotation_per_cm;
-	const deceleration_distance = 5;
+	const deceleration_distance = 15;
 	if (reached_position) leeway = 0.3;
 	else leeway = 0.2;
 
@@ -144,11 +143,11 @@ function set_pwm_controller (end_position){
 	else if (pwm_modifier > 1) pwm_modifier = 1;
 	var pwm_to_send = 32 + Math.ceil(25 * pwm_modifier);
 	if (pwm_to_send > 32 && pwm_to_send < 35) pwm_to_send = 35;
-	if (pwm_to_send > 29 && pwm_to_send < 32) pwm_to_send = 29;
+	if (pwm_to_send > 29 && pwm_to_send < 32) pwm_to_send = 27;
 
 	var pwm_diff = pwm_to_send - curr_duty_cycle;
-	if(pwm_diff > 5) pwm_diff = 5;
-	else if(pwm_diff < -5) pwm_diff = -5;
+	if(pwm_diff > 1) pwm_diff = 1;
+	else if(pwm_diff < -1) pwm_diff = -1;
 	
 	change_duty_cycle(pwm_diff);
 

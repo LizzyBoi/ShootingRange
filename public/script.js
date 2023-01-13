@@ -1,5 +1,3 @@
-const { stringify } = require("querystring");
-
 let ws;
 (async function() {
 	ws = await connectToServer();
@@ -55,37 +53,36 @@ window.onload = function(){
     });
 };
 
-function updateSubmit(input, value, slider, min, max, command){
+function updateSubmit(input, id, slider, min, max, command){
     if(document.getElementById(input).value >= min && document.getElementById(input).value <= max){
         document.getElementById(slider).value = document.getElementById(input).value;
-        document.getElementById(value).innerHTML = document.getElementById(input).value;
+        document.getElementById(id).innerHTML = document.getElementById(input).value;
         document.getElementById(input).value = "";  
 
-    	sendPublicToSocket(command, value)
+    	sendPublicToSocket(command, id)
     } else {
         document.getElementById(input).value = "";   
     }
 }
 
-function halt(command){
+function halt(){
 	document.getElementById('currentSpeed').innerHTML = 32;
 	document.getElementById('speedSlider').value = document.getElementById('currentSpeed').innerHTML;
-	
-	sendPublicToSocket(command, 32);
 
+	sendPublicToSocket('set', 'currentSpeed');
 }
 
-function incrementSlider(x, value, slider, min, max, command){
+function incrementSlider(x, id, slider, min, max, command){
     var scalar = 10
-	var previousValue = parseInt(document.getElementById(value).innerHTML)
-	if(parseInt(document.getElementById(value).innerHTML) >= min && parseInt(document.getElementById(value).innerHTML)  <= max){
-    	document.getElementById(value).innerHTML = parseInt(document.getElementById(value).innerHTML) + scalar * x;
-    	document.getElementById(slider).value = document.getElementById(value).innerHTML;
+	var previousValue = parseInt(document.getElementById(id).innerHTML)
+	if(parseInt(document.getElementById(id).innerHTML) >= min && parseInt(document.getElementById(id).innerHTML)  <= max){
+    	document.getElementById(id).innerHTML = parseInt(document.getElementById(id).innerHTML) + scalar * x;
+    	document.getElementById(slider).value = document.getElementById(id).innerHTML;
 	}
-	if(parseInt(document.getElementById(value).innerHTML) < min || parseInt(document.getElementById(value).innerHTML)  > max){
-		document.getElementById(value).innerHTML = previousValue;
+	if(parseInt(document.getElementById(id).innerHTML) < min || parseInt(document.getElementById(id).innerHTML)  > max){
+		document.getElementById(id).innerHTML = previousValue;
 	}
-    sendPublicToSocket(command, value);
+    sendPublicToSocket(command, id);
 }
 
 function incrementDir(dir){
@@ -106,10 +103,10 @@ function updateDir(){
 	}
 }
 
-function onSliderInput(command, value, slider) {
-	document.getElementById(value).innerText = document.getElementById(slider).value;
+function onSliderInput(command, id, slider) {
+	document.getElementById(id).innerText = document.getElementById(slider).value;
 
-	sendPublicToSocket(command, value);
+	sendPublicToSocket(command, id);
 }
 
 

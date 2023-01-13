@@ -66,6 +66,12 @@ p {
   width: 10px;
 }
 
+.targetPositionSlider{
+  position: absolute;
+  transform: translate(10px,-535px);
+  opacity: 50%;
+}
+
 .positionSubmit{
   position: absolute;
   transform: translate(70px, -413px);

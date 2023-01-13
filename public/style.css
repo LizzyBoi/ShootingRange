@@ -47,17 +47,19 @@ p {
 
 .slider{
   position: absolute;
-  -webkit-appearance: slider-vertical
+  -webkit-appearance: slider-vertical;
 }
 
 .speedSlider{
-  transform: translate(100%,0%);
+  transform: translate(180px,0px);
   height: 215px;
+  width: 20px;
 }
 
 .positionSlider{
-  transform: translate(-40px,0px);
+  transform: translate(10px,0px);
   height: 400px;
+  width: 10px;
 }
 
 .positionSubmit{

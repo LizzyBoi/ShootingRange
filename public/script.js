@@ -1,3 +1,5 @@
+const { stringify } = require("querystring");
+
 let ws;
 (async function() {
 	ws = await connectToServer();
@@ -53,26 +55,27 @@ window.onload = function(){
     });
 };
 
-function updateSubmit(input, value, slider, min, max){
+function updateSubmit(input, value, slider, min, max, command){
     if(document.getElementById(input).value >= min && document.getElementById(input).value <= max){
         document.getElementById(slider).value = document.getElementById(input).value;
         document.getElementById(value).innerHTML = document.getElementById(input).value;
         document.getElementById(input).value = "";  
 
-    	sendPublicToSocket(value)
+    	sendPublicToSocket(command, value)
     } else {
         document.getElementById(input).value = "";   
     }
 }
 
-function halt(){
+function halt(command){
 	document.getElementById('currentSpeed').innerHTML = 32;
 	document.getElementById('speedSlider').value = document.getElementById('currentSpeed').innerHTML;
+	
+	sendPublicToSocket(command, 32);
 
-	sendPublicToSocket('currentSpeed');
 }
 
-function incrementSlider(x, value, slider, min, max){
+function incrementSlider(x, value, slider, min, max, command){
     var scalar = 10
 	var previousValue = parseInt(document.getElementById(value).innerHTML)
 	if(parseInt(document.getElementById(value).innerHTML) >= min && parseInt(document.getElementById(value).innerHTML)  <= max){
@@ -82,7 +85,7 @@ function incrementSlider(x, value, slider, min, max){
 	if(parseInt(document.getElementById(value).innerHTML) < min || parseInt(document.getElementById(value).innerHTML)  > max){
 		document.getElementById(value).innerHTML = previousValue;
 	}
-    sendPublicToSocket(value);
+    sendPublicToSocket(command, value);
 }
 
 function incrementDir(dir){
@@ -103,14 +106,15 @@ function updateDir(){
 	}
 }
 
-function onSliderInput(value, slider) {
+function onSliderInput(command, value, slider) {
 	document.getElementById(value).innerText = document.getElementById(slider).value;
 
-	sendPublicToSocket(value);
+	sendPublicToSocket(command, value);
 }
 
-function sendPublicToSocket(elemID) {
+
+function sendPublicToSocket(command, elemID) {
 	const value = parseInt(document.getElementById(elemID).innerText);
-	const message = {command: "set", value: value};
+	const message = {command: command, value: value};
 	ws.send(JSON.stringify(message));
 }

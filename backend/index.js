@@ -36,7 +36,7 @@ var app = express()
 
 var pwm_output = [];
 for (const gpio of [6,13,19,26,12,16]) {
-	pwm_output.push(new gpio(gpio, 'out'));	
+	pwm_output.push(new Gpio(gpio, 'out'));	
 }
 var curr_duty_cycle = 32;
 
@@ -124,6 +124,7 @@ function go_to_position(end_position) {
 var reached_position = 0;
 function set_pwm_controller (end_position){
 	//TODO
+	//convert rotation_index to cm
 	//acutally set enable signal low for breaking
 	const pulse_per_rotation = 4;
 	const rotation_per_cm = 7.5;

@@ -10,8 +10,6 @@ class MotorController {
 		this.rotation_pin = new Gpio(rotation_pin_number, 'in', 'both');
 		this.rotation_pin.watch(this.rotation_trigger.bind({"caller": this}));
 		this.direction_pin = new Gpio(direction_pin_number, 'in');
-		console.log(this.direction_pin);
-		console.log(this.direction_pin.readSync());
 
 		//set to watch on both edges
 		this.emergency_pin = new Gpio(emergency_pin_number, 'in');;
@@ -27,10 +25,15 @@ class MotorController {
 		this.still_leeway = 0.3 * this.pulse_per_cm;
 
 		this.end_rotation_index = 0 * this.pulse_per_cm;
-		this.interval = null;
 		this.reached_position = 0;
 
-		this.ctr = new PidController(0.25, 0.01, 0.01);
+		this.stopped = 1;
+		this.ctr = new PidController({
+			k_p: 0.20, 
+			k_i: 0.01, 
+			k_d: 0.01, 
+			i_max: 10});
+		this.interval = setInterval(this.pid_update.bind({"caller": this}), 100); 
 
 		this.set_duty_cycle(32);
 
@@ -41,15 +44,23 @@ class MotorController {
 	enable() {}
 
 	start() {
+		/*
 		this.end_rotation_index = this.curr_rotation_index;
-		this.interval = setInterval(this.control_pwm, 10, this);
+		this.interval = setInterval(this.pid_update, 50, this);
+		*/
+		this.stopped = 0;
+		console.log(this.stopped);
 	}
 
 	stop() {
+		/*
 		if(this.interval) {
 			clearInterval(this.interval);
 		}
-		this.set_duty_cycle(0);
+		*/
+		this.stopped = 1;
+		console.log(this.stopped);
+		this.set_duty_cycle(32);
 	}
 	
 	change_duty_cycle(change_by) {
@@ -60,6 +71,7 @@ class MotorController {
 			this.curr_duty_cycle = 63;
 		}
 
+		console.log(`duty_cycle ${this.curr_duty_cycle}`);
 		this.write_pwm_duty_cycle(this.curr_duty_cycle);
 	}
 
@@ -70,6 +82,7 @@ class MotorController {
 
 	go_to_position(end_position) {
 		this.end_rotation_index = end_position * this.pulse_per_cm; 
+		this.ctr.setTarget(this.end_rotation_index);
 	}
 
 	rotation_trigger() {
@@ -81,10 +94,11 @@ class MotorController {
 			console.log(caller.curr_rotation_index);
 		} else if (direction === 0) {
 			caller.curr_rotation_index--;
-			console.log(caller.curr_rotation_index);
 		}
 
-		caller.ctr.update(caller.curr_rotation_index);
+		console.log(`disc_pos: ${caller.curr_rotation_index}`);
+		let input = caller.ctr.update(caller.curr_rotation_index);
+		caller.pid_output_to_pwm(input);
 	}
 
 	write_pwm_duty_cycle(duty_cycle) {
@@ -99,7 +113,7 @@ class MotorController {
 		}
 	}
 
-	control_pwm(caller) {
+	/*control_pwm(caller) {
 		//TODO
 		//acutally set enable signal low for breaking
 		
@@ -125,6 +139,24 @@ class MotorController {
 		caller.change_duty_cycle(pwm_to_send);
 
 		console.log(`${Date.now()}\t${caller.curr_duty_cycle}`);
+	}
+	*/
+
+	pid_update() {
+		let caller = this.caller;
+		let input = caller.ctr.update(caller.curr_rotation_index);
+		caller.pid_output_to_pwm(input);
+	}
+
+	pid_output_to_pwm(pid_output) {
+		if(this.stopped) return;
+			
+		let offset = 32 + pid_output;
+		if (offset < 10) offset = 10;
+		else if (offset > 54) offset = 54;
+
+		console.log(`duty_cycle ${this.curr_duty_cycle}`);
+		this.set_duty_cycle(offset);	
 	}
 }
 

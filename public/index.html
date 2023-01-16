@@ -67,16 +67,16 @@
 	<div class="pidController">
 		<p class="PID_text">Grandma no touchy touchy (PID parameters):	</p>
 		<p class="PID_text">PID_p:</p>
-		<input type="number" value="0" step="0.01" id="PID_p">
+		<input type="number" value="0" step="0.01" id="PID_p" onchange="PID_onchange(PID_p)">
 		<br>
 		<p class="PID_text">PID_i:</p>
-		<input type="number" value="0" step="0.01" id="PID_i">
+		<input type="number" value="0" step="0.01" id="PID_i" onchange="PID_onchange(PID_i)">
 		<br>
 		<p class="PID_text">PID_d:</p>
-		<input type="number" value="0" step="0.01" id="PID_d">
+		<input type="number" value="0" step="0.01" id="PID_d" onchange="PID_onchange(PID_d)">
 		<br>
 		<p class="PID_text">PID_?:</p>
-		<input type="number" value="0" step="0.01" id="PID_unknown">	
+		<input type="number" value="0" step="0.01" id="PID_unknown" onchange="PID_onchange(PID_unkown)">	
 	</div>
 
 </body>

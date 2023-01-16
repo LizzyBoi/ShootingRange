@@ -122,6 +122,10 @@ function sendCommandToSocket(command) {
 	ws.send(JSON.stringify(message));
 }
 
+function PID_onchange(id){
+	
+}
+
 function sendPublicToSocket(command, elemID) {
 	const value = parseInt(document.getElementById(elemID).innerText);
 	const message = {command: command, value: value};

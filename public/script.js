@@ -73,11 +73,11 @@ function halt(){
 }
 
 function startButton(){
-	sendPublicToSocket('start');
+	sendCommandToSocket('start');
 }
 
 function stopButton(){
-	sendPublicToSocket('stop')
+	sendCommandToSocket('stop',);
 }
 
 function incrementSlider(x, id, slider, min, max, command){
@@ -117,6 +117,10 @@ function onSliderInput(command, id, slider) {
 	sendPublicToSocket(command, id);
 }
 
+function sendCommandToSocket(command) {
+	const message = {command: command};
+	ws.send(JSON.stringify(message));
+}
 
 function sendPublicToSocket(command, elemID) {
 	const value = parseInt(document.getElementById(elemID).innerText);

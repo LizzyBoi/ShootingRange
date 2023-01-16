@@ -1,6 +1,8 @@
+const SegfaultHandler = require('segfault-handler');
+SegfaultHandler.registerHandler('crash.log');
 const express = require('express');
 const { Server } = require('ws');
-const { MotorController } = require('./motorController.js');
+const MotorController = require('./motor_controller.js');
 
 const hostname = "127.0.0.1";
 const port = 3000;
@@ -16,14 +18,19 @@ ws_server.on('connection', (ws) => {
 		const message = JSON.parse(messageString);
 
 		if (message.command === "change") {
+			console.log("change");
 			change_duty_cycle(message.value);
 		} else if (message.command === "set") {
+			console.log("set");
 			set_duty_cycle(message.value);
 		} else if (message.command === "goto") {
+			console.log("goto");
 			go_to_position(message.value);
 		} else if (message.command === "stop") {
+			console.log("stop");
 			motor_stop();
 		} else if (message.command === "start") {
+			console.log("start");
 			motor_start();	
 		}
 	});
@@ -31,9 +38,8 @@ ws_server.on('connection', (ws) => {
 	ws.on('close', () => {console.log('Client has disconnected')});
 });
 
-
 var app = express()
-	.use(express.static('../public'))
+	.use(express.static('./public'))
 	.get('/', (req, res) => {res.send('Hello World')})
 	.listen(port, () => {console.log(`Listening on port ${port}`)});
 
@@ -61,3 +67,10 @@ function go_to_position(value) {
 	motorController.go_to_position(value);
 }
 
+function motor_start() {
+	motorController.start();
+}
+
+function motor_stop() {
+	motorController.stop();
+}

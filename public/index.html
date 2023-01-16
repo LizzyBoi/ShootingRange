@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div class="positionControl">
-		<input type="range" class="slider positionSlider" min="0" max="90" value="0" step="2" orient="vertical", list="distance" id="positionSlider" oninput="onSliderInput('goto', 'positionValue', 'positionSlider')">
+		<input type="range" class="slider positionSlider" min="0" max="90" value="0" step="2" orient="vertical", list="distance" id="positionSlider" oninput="onSliderInput('goto', 'positionValue', 'positionSlider')" disabled>
 		<datalist id="distance">
 			<option class="distance" value="90" label="90"></option>
 			<option class="distance" value="80" label="80"></option>
@@ -24,11 +24,11 @@
 		<div class="positionSubmit">
 			<label class="generalText positionControlText" for="fname">Go to position:</label><br>
 			<br>
-			<input class="submit" type="number" id="positionInput"><br>
+			<input class="arrowlessSubmit" type="number" id="positionInput"><br>
 			<input type="button" onclick="updateSubmit('positionInput', 'positionValue', 'positionSlider', 0, 90, 'goto')" value="update" class="button" id="positionSubmitButton">
 			<p id="positionValue" style="transform: translate(110px, -76px);">0</p>
 		</div>
-			<div class="incrementDiv">
+		<div class="incrementDiv">
 				<input type="button" class="triButtonUp" id="triButtonUp" onclick="incrementSlider(1, 'positionValue', 'positionSlider', 0, 90)">
 				<br>
 				<input type="button" class="triButtonDown" id="triButtonDown" onclick="incrementSlider(-1, 'positionValue', 'positionSlider', 0, 90)">
@@ -37,12 +37,12 @@
 					<br>
 					<input type="button" class="triButtonDown" id="triDirDown" onclick="incrementDir(-1)">
 				</div>
-			</div>
-			<div>
+		</div>
+		<div>
 				<input type="button" class="button gonogo" value="Start" onclick="startButton()">
 				<input type="button" class="button gonogo" value="Stop" onclick="stopButton()">
-			</div>
 		</div>
+	</div>
 	</div>
 	<div class="PWMControl">
 	<div>
@@ -52,20 +52,32 @@
 		<div>
 			<label class="generalText" for="fname">Pick Discrete Speed:</label><br>
 			<br>
-			<input class="submit" type="number" id="speedInput"><br>
+			<input class="arrowlessSubmit" type="number" id="speedInput"><br>
 			<input type="button" onclick="updateSubmit('speedInput', 'currentSpeed', 'speedSlider', 1, 63, 'set')" value="update" class="button" id="speedInputButton">
 		</div>
 	</div>
-	<input type="button" class="button halt" value="Halt" onclick="halt()">
+		<input type="button" class="button halt" value="Halt" onclick="halt()">
     </div>
-	<br>
-	<input type="range" id="lerpTempSlider" min="0" max="100" value="0">
-	<p id="lerpValue">0</p>
-<input type="range" class="slider positionSlider targetPositionSlider" min="0" max="90" value="0" step="2" orient="vertical" id="targetPositionSlider" disabled>
-	<!-- hidden values -->
+<!-- hidden values -->
 	<input type="hidden" id="motorDir" value="0">
 	<input type="hidden" id="targetPosition" value="0">
 	<input type="hidden" id="currentPwm" value="0">
+
+<!-- PID Controllers-->
+	<div class="pidController">
+		<p class="PID_text">Grandma no touchy touchy (PID parameters):	</p>
+		<p class="PID_text">PID_p:</p>
+		<input type="number" value="0" step="0.01" id="PID_p">
+		<br>
+		<p class="PID_text">PID_i:</p>
+		<input type="number" value="0" step="0.01" id="PID_i">
+		<br>
+		<p class="PID_text">PID_d:</p>
+		<input type="number" value="0" step="0.01" id="PID_d">
+		<br>
+		<p class="PID_text">PID_?:</p>
+		<input type="number" value="0" step="0.01" id="PID_unknown">	
+	</div>
 
 </body>
 </html>

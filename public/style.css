@@ -64,14 +64,14 @@ p {
   transform: translate(10px,0px);
   height: 400px;
   width: 10px;
+  color: #FF4C29 ;
 }
-
-.targetPositionSlider{
-  position: absolute;
-  transform: translate(10px,-535px);
-  opacity: 50%;
-}
-
+.positionSlider::-webkit-slider-runnable-track{
+  -webkit-appearance: none;
+  opacity: 0;
+  
+} 
+  
 .positionSubmit{
   position: absolute;
   transform: translate(70px, -413px);
@@ -92,14 +92,14 @@ datalist {
   transform: translate(40px, 6px);
 }
 
-.submit{
+.arrowlessSubmit{
   background-color: #2C394B;
   color: #FF4C29;
 }
 
 /* removes arrows from submit field*/
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
+.arrowlessSubmit::-webkit-outer-spin-button,
+.arrowlessSubmit::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -144,6 +144,16 @@ datalist {
   border-color:transparent transparent #FF4C29;
 }
 .positionControl{
-  height: 400px;
+  height: 418px;
   
+}
+
+.PID_text{
+  font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.pidController{
+  position: absolute;
 }

@@ -28,10 +28,13 @@ ws_server.on('connection', (ws) => {
 			go_to_position(message.value);
 		} else if (message.command === "stop") {
 			console.log("stop");
-			motor_stop();
+			controller_stop();
 		} else if (message.command === "start") {
 			console.log("start");
-			motor_start();	
+			controller_start();	
+		} else if (message.command === "set_pid_values") {
+			console.log("set_pid_values");
+			controller_set_pid_values(message.value);
 		}
 	});
 
@@ -67,10 +70,14 @@ function go_to_position(value) {
 	motorController.go_to_position(value);
 }
 
-function motor_start() {
+function controller_start() {
 	motorController.start();
 }
 
-function motor_stop() {
+function controller_stop() {
 	motorController.stop();
+}
+
+function controller_set_pid_values(valueObj) {
+	motorController.set_pid_values(valueObj);
 }

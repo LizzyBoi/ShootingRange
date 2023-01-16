@@ -43,6 +43,13 @@ class MotorController {
 
 	enable() {}
 
+	set_pid_values(values) {
+		this.ctr.k_p = values.k_p
+		this.ctr.k_i = values.k_i
+		this.ctr.k_d = values.k_d
+		this.ctr.i_max = values.i_max
+	}
+
 	start() {
 		/*
 		this.end_rotation_index = this.curr_rotation_index;

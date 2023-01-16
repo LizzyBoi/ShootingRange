@@ -27,13 +27,21 @@ class MotorController {
 		this.end_rotation_index = 0 * this.pulse_per_cm;
 		this.reached_position = 0;
 
+		this.max_pwm = 54;
+		this.min_pwm = 10;
+		this.lower_dead = 28;
+		this.upper_dead = 36;
+
 		this.stopped = 1;
+		this.pid_domain = 10 * this.pulse_per_cm;
+		this.accel_time_ms = 20;
+		this.last_pwm_inc_time = Date.now();
 		this.ctr = new PidController({
 			k_p: 0.20, 
 			k_i: 0.01, 
 			k_d: 0.01, 
 			i_max: 10});
-		this.interval = setInterval(this.pid_update.bind({"caller": this}), 100); 
+		this.interval = setInterval(this.controller_update.bind({"caller": this}), 100); 
 
 		this.set_duty_cycle(32);
 
@@ -72,13 +80,12 @@ class MotorController {
 	
 	change_duty_cycle(change_by) {
 		this.curr_duty_cycle = this.curr_duty_cycle + change_by;
-		if (this.curr_duty_cycle < 1) {
-			this.curr_duty_cycle = 1;
-		} else if (this.curr_duty_cycle > 63) {
-			this.curr_duty_cycle = 63;
+		if (this.curr_duty_cycle < this.min_pwm) {
+			this.curr_duty_cycle = this.min_pwm;
+		} else if (this.curr_duty_cycle > this.max_pwm) {
+			this.curr_duty_cycle = this.max_pwm;
 		}
 
-		console.log(`duty_cycle ${this.curr_duty_cycle}`);
 		this.write_pwm_duty_cycle(this.curr_duty_cycle);
 	}
 
@@ -98,14 +105,11 @@ class MotorController {
 
 		if(direction === 1) {
 			caller.curr_rotation_index++;
-			console.log(caller.curr_rotation_index);
 		} else if (direction === 0) {
 			caller.curr_rotation_index--;
 		}
 
-		console.log(`disc_pos: ${caller.curr_rotation_index}`);
-		let input = caller.ctr.update(caller.curr_rotation_index);
-		caller.pid_output_to_pwm(input);
+		console.log(`rotation: ${caller.curr_rotation_index}`);
 	}
 
 	write_pwm_duty_cycle(duty_cycle) {
@@ -120,49 +124,52 @@ class MotorController {
 		}
 	}
 
-	/*control_pwm(caller) {
-		//TODO
-		//acutally set enable signal low for breaking
-		
-		var leeway = caller.moving_leeway;
-
-		if(caller.end_rotation_index + leeway > caller.curr_rotation_index && caller.end_rotation_index - leeway < caller.curr_rotation_index) {
-			console.log("reached approx position");
-			caller.set_duty_cycle(32);
-		}
-
-		var pwm_modifier = (caller.end_rotation_index - caller.curr_rotation_index) / caller.deceleration_rotation_distance;
-		if (pwm_modifier < -1) pwm_modifier = -1;
-		else if (pwm_modifier > 1) pwm_modifier = 1;
-
-		var pwm_to_send = 32 + Math.ceil(25 * pwm_modifier);
-		if (pwm_to_send > 32 && pwm_to_send < 35) pwm_to_send = 35;
-		if (pwm_to_send > 29 && pwm_to_send < 32) pwm_to_send = 29;
-
-		var pwm_diff = pwm_to_send - caller.curr_duty_cycle;
-		if(pwm_diff > 2) pwm_diff = 2;
-		else if(pwm_diff < -2) pwm_diff = -2;
-
-		caller.change_duty_cycle(pwm_to_send);
-
-		console.log(`${Date.now()}\t${caller.curr_duty_cycle}`);
-	}
-	*/
-
-	pid_update() {
+	controller_update() {
 		let caller = this.caller;
-		let input = caller.ctr.update(caller.curr_rotation_index);
-		caller.pid_output_to_pwm(input);
+		if (caller.stopped) return;
+		let error = caller.end_rotation_index - caller.curr_rotation_index;
+
+		if (error < 3 && error > -3) {
+			console.log("at position");
+			caller.set_duty_cycle(32);
+			return
+		};
+
+		if (error < caller.pid_domain && error > -1 * caller.pid_domain) {
+			console.log("pid");
+			let input = caller.ctr.update(caller.curr_rotation_index);
+			caller.pid_output_to_pwm(input);
+		} else {
+			console.log("cool amazing stuff");
+			let now = Date.now()
+			let timediff = now - caller.last_pwm_inc_time;
+			console.log(`timediff ${timediff}`);
+			if (timediff > caller.accel_time_ms) {
+				if (error > 0) {
+					caller.change_duty_cycle(1);
+				} else {
+					caller.change_duty_cycle(-1);
+				}
+				
+				caller.last_pwm_inc_time = now;
+			}
+		}
+		console.log(`duty_cycle ${caller.curr_duty_cycle} rotation_index ${caller.curr_rotation_index} distance ${caller.curr_rotation_index/caller.pulse_per_cm}`);
 	}
 
 	pid_output_to_pwm(pid_output) {
-		if(this.stopped) return;
-			
-		let offset = 32 + pid_output;
-		if (offset < 10) offset = 10;
-		else if (offset > 54) offset = 54;
+		let offset;
 
-		console.log(`duty_cycle ${this.curr_duty_cycle}`);
+		if (pid_output < 0) {
+			offset = this.lower_dead + pid_output;
+			if (offset < this.min_pwm) offset = this.min_pwm;
+		} else if (pid_output > 0){
+			offset = this.upper_dead + pid_output;
+			if (offset > this.max_pwm) offset = this.max_pwm;
+		} else {
+			offset = 32;
+		}
+
 		this.set_duty_cycle(offset);	
 	}
 }

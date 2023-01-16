@@ -123,12 +123,10 @@ function sendCommandToSocket(command) {
 }
 
 function PID_onchange(){
-	parseInt(document.getElementById(PID_p).value) = p_value;
-	parseInt(document.getElementById(PID_i).value) = i_value;
-	parseInt(document.getElementById(PID_d).value) = d_value;
-	parseInt(document.getElementById(PID_i_max).value) = i_max_value;
-
-	console.log(parseInt(document.getElementById(PID_p).value));
+	p_value = parseFloat(document.getElementById("PID_p").value);
+        i_value = parseFloat(document.getElementById("PID_i").value);
+        d_value = parseFloat(document.getElementById("PID_d").value);
+	i_max_value = parseFloat(document.getElementById("PID_i_max").value);
 
 	const message = {command: "set_pid_values", value: {k_p: p_value, k_i: i_value, k_d: d_value, i_max: i_max_value} }
 	ws.send(JSON.stringify(message));

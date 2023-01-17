@@ -85,7 +85,7 @@ function controller_get_pid_values() {
 
 function distance_to_frontend(int_distance) {
 	const message = {command: "range_data", value: int_distance}
-	console.log(message);
+	//console.log(message);
 	send_to_frontend(message);
 }
 

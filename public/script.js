@@ -6,14 +6,8 @@ let ws;
 		msg_obj = JSON.parse(wsMessage.data);
 		
 		if(msg_obj.command === "range_data") {
-			let last_position = document.getElementById("positionSlider").value;
 			document.getElementById("positionSlider").value = msg_obj.value.dist;
 			document.getElementById("motorDir").value = msg_obj.value.dir;
-			if(last_position != document.getElementById("positionSlider").value){
-				document.getElementById("movementCheck").value = 1
-			} else{
-				document.getElementById("movementCheck").value = 0
-			}
 			updateDir()
 		}
 		 else if(msg_obj.command === "pid_values") {
@@ -102,7 +96,7 @@ function incrementDir(dir){
 }
 
 function updateDir(){
-	if(document.getElementById("movementCheck").value === -1){
+	if(parseInt(document.getElementById("motorDir").value) === -1){
 		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #d1d5db';
 		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #d1d5db';
 	} else if(parseInt(document.getElementById("motorDir").value) === 1){

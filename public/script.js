@@ -134,7 +134,7 @@ function PID_onchange(){
 }
 
 function sendPublicToSocket(command, elemID) {
-	const value = parseInt(document.getElementById(elemID).innerText);
+	const value = parseFloat(document.getElementById(elemID).innerText);
 	const message = {command: command, value: value};
 	ws.send(JSON.stringify(message));
 }

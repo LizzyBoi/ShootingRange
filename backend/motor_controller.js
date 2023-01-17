@@ -2,7 +2,7 @@ const Gpio = require('onoff').Gpio;
 let PidController = require('node-pid-controller'); 
 
 class MotorController {
-	constructor(pwm_pin_numbers, rotation_pin_number, direction_pin_number, enable_pin_number, emergency_pin_number) {
+	constructor(pwm_pin_numbers, rotation_pin_number, direction_pin_number, enable_pin_number, emergency_pin_number, distance_callback) {
 		this.pwm_pins = [];
 		for (const pwm_pin_number of pwm_pin_numbers) {
 			this.pwm_pins.push(new Gpio(pwm_pin_number, 'out'));	
@@ -10,6 +10,7 @@ class MotorController {
 		this.rotation_pin = new Gpio(rotation_pin_number, 'in', 'both');
 		this.rotation_pin.watch(this.rotation_trigger.bind({"caller": this}));
 		this.direction_pin = new Gpio(direction_pin_number, 'in');
+		this.distance_callback = distance_callback;
 
 		//set to watch on both edges
 		this.emergency_pin = new Gpio(emergency_pin_number, 'in');;
@@ -116,6 +117,11 @@ class MotorController {
 			caller.curr_rotation_index--;
 		}
 
+		if(Math.round(caller.curr_rotation_index % caller.pulse_per_cm) = 0) {
+			let int_distance = Math.round(caller.curr_rotation_index / caller.pulse_per_cm);	
+			caller.distance_callback(int_distance);
+		}
+
 		console.log(`rotation: ${caller.curr_rotation_index}`);
 	}
 
@@ -148,12 +154,30 @@ class MotorController {
 			return
 		};
 
+		let now = Date.now();
+		let timediff = now - caller.last_pwm_inc_time;
 		if (error < caller.pid_domain && error > -1 * caller.pid_domain) {
-			let input = caller.ctr.update(caller.curr_rotation_index);
-			caller.pid_output_to_pwm(input);
+			let pid_output = caller.ctr.update(caller.curr_rotation_index);
+			let pwm_output = caller.pid_output_to_pwm(pid_output);
+			console.log(`error: ${error}`);
+			console.log(`pid_input: ${pwm_output}`);
+			console.log(`curr_input: ${caller.curr_duty_cycle}`);
+			console.log(`timediff: ${timediff}`);
+			if(error > 0 && pwm_output > caller.curr_duty_cycle) {
+				if(timediff > caller.accel_time_ms) {
+					caller.change_duty_cycle(1);
+					caller.last_pwm_inc_time = now;
+				}
+			} else if (error < 0 && pwm_output < caller.curr_duty_cycle) {
+				if(timediff > caller.accel_time_ms) {
+					caller.change_duty_cycle(-1);
+					caller.last_pwm_inc_time = now;
+				}
+			} else {
+				caller.set_duty_cycle(pwm_output);
+			}
+			
 		} else {
-			let now = Date.now()
-			let timediff = now - caller.last_pwm_inc_time;
 			if (timediff > caller.accel_time_ms) {
 				if (error > 0) {
 					caller.change_duty_cycle(1);
@@ -183,7 +207,7 @@ class MotorController {
 			offset = 32;
 		}
 
-		this.set_duty_cycle(offset);	
+		return offset;
 	}
 }
 

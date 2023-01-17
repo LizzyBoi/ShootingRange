@@ -22,6 +22,7 @@ ws_server.on('connection', (ws) => {
 			change_duty_cycle(message.value);
 		} else if (message.command === "set") {
 			console.log("set");
+			console.log(message.value);
 			set_duty_cycle(message.value);
 		} else if (message.command === "goto") {
 			console.log("goto");

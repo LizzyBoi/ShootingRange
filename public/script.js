@@ -6,8 +6,8 @@ let ws;
 		msg_obj = JSON.parse(wsMessage.data);
 		
 		if(msg_obj.command === "range_data") {
-			document.getElementById("positionSlider").value = msg_obj.value;
-			document.getElementById("motorDir").value = msg_obj.value;
+			document.getElementById("positionSlider").value = msg_obj.value.dist;
+			document.getElementById("motorDir").value = msg_obj.value.dir;
 			// here motorDir is just a hidden input value in the html code that keeps track of direction with 1=forward -1=backward 0=still
 			updateDir()
 		} else if(msg_obj.command === "lerp") {

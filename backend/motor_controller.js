@@ -117,9 +117,9 @@ class MotorController {
 			caller.curr_rotation_index--;
 		}
 
-		if(Math.round(caller.curr_rotation_index % caller.pulse_per_cm) = 0) {
+		if(Math.round(caller.curr_rotation_index % caller.pulse_per_cm) === 0) {
 			let int_distance = Math.round(caller.curr_rotation_index / caller.pulse_per_cm);	
-			caller.distance_callback(int_distance);
+			caller.distance_callback({dist: int_distance, dir: caller.direction_pin.readSync()});
 		}
 
 		console.log(`rotation: ${caller.curr_rotation_index}`);

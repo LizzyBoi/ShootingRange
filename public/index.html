@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div class="positionControl">
-		<input type="range" class="slider positionSlider" min="0" max="90" value="0" step="2" orient="vertical", list="distance" id="positionSlider" oninput="onSliderInput('goto', 'positionValue', 'positionSlider')" disabled>
+		<input type="range" class="slider positionSlider" min="0" max="90" value="0" step="2" orient="vertical", list="distance" id="positionSlider" disabled>
 		<datalist id="distance">
 			<option class="distance" value="90" label="90"></option>
 			<option class="distance" value="80" label="80"></option>
@@ -25,7 +25,7 @@
 			<label class="generalText positionControlText" for="fname">Go to position:</label><br>
 			<br>
 			<input class="arrowlessSubmit" type="number" id="positionInput"><br>
-			<input type="button" onclick="updateSubmit('positionInput', 'positionValue', 'positionSlider', 0, 90, 'goto')" value="update" class="button" id="positionSubmitButton">
+			<input type="button" onclick="updateSubmit('positionInput', 'positionValue', 'sliderPosition', 0, 90, 'goto')" value="update" class="button" id="positionSubmitButton">
 			<p id="positionValue" style="transform: translate(110px, -76px);">0</p>
 		</div>
 		<div class="incrementDiv">

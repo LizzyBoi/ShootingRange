@@ -5,7 +5,7 @@ let ws;
 	ws.onmessage = (wsMessage) => {
 		msg_obj = JSON.parse(wsMessage.data);
 		
-		if(msg_obj.command === "rot") {
+		if(msg_obj.command === "curr_dist") {
 			document.getElementById("positionValue").innerText = msg_obj.value;
 		} else if(msg_obj.command === "dir"){
 			document.getElementById("motorDir").value = msg_obj.value;
@@ -54,7 +54,9 @@ window.onload = function(){
 
 function updateSubmit(input, id, slider, min, max, command){
     if(document.getElementById(input).value >= min && document.getElementById(input).value <= max){
-        document.getElementById(slider).value = document.getElementById(input).value;
+        if(slider != 'sliderPosition'){
+			document.getElementById(slider).value = document.getElementById(input).value;
+		}
         document.getElementById(id).innerHTML = document.getElementById(input).value;
         document.getElementById(input).value = "";  
 

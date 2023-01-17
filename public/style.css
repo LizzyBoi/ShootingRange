@@ -111,7 +111,7 @@ datalist {
 
 .incrementDir{
   position: absolute;
-  transform: translate(90px, -105px);
+  transform: translate(0px, 0px);
 }
 
 .triButtonUp{

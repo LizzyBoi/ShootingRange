@@ -50,7 +50,9 @@ var app = express()
 	.listen(port, () => {console.log(`Listening on port ${port}`)});
 
 function send_to_frontend(object) {
-	frontend_ws.send(JSON.stringify(object));
+	if (frontend_ws) {
+		frontend_ws.send(JSON.stringify(object));
+	}
 }
 
 function change_duty_cycle(value) {
@@ -82,7 +84,9 @@ function controller_get_pid_values() {
 }
 
 function distance_to_frontend(int_distance) {
-	send_to_frontend({command: "curr_dist", value: int_distance});
+	const message = {command: "range_data", value: int_distance}
+	console.log(message);
+	send_to_frontend(message);
 }
 
 const pwm_pin_numbers = [6,13,19,26,12,16];

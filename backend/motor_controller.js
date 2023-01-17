@@ -27,6 +27,7 @@ class MotorController {
 
 		this.end_rotation_index = 0 * this.pulse_per_cm;
 		this.reached_position = 0;
+		this.time_since_trigger = Date.now();;
 
 		this.max_pwm = 54;
 		this.min_pwm = 10;
@@ -110,16 +111,15 @@ class MotorController {
 	rotation_trigger() {
 		const caller = this.caller;
 		const direction = caller.direction_pin.readSync();
+		caller.time_since_trigger = Date.now();
+
+		let int_distance = Math.round(caller.curr_rotation_index / caller.pulse_per_cm);	
+		caller.distance_callback({dist: int_distance, dir: direction});
 
 		if(direction === 1) {
 			caller.curr_rotation_index++;
 		} else if (direction === 0) {
 			caller.curr_rotation_index--;
-		}
-
-		if(Math.round(caller.curr_rotation_index % caller.pulse_per_cm) === 0) {
-			let int_distance = Math.round(caller.curr_rotation_index / caller.pulse_per_cm);	
-			caller.distance_callback({dist: int_distance, dir: caller.direction_pin.readSync()});
 		}
 
 		console.log(`rotation: ${caller.curr_rotation_index}`);
@@ -140,6 +140,15 @@ class MotorController {
 
 	controller_update() {
 		let caller = this.caller;
+		let now = Date.now();
+		let timediff = now - caller.last_pwm_inc_time;
+
+		if(now - caller.time_since_trigger > caller.accel_time_ms) {
+			let int_distance = Math.round(caller.curr_rotation_index / caller.pulse_per_cm);
+			caller.distance_callback({dist: int_distance, dir: -1});
+		}
+		console.log(`int_dist ${int_distance} dir: ${caller.direction_pin.readSync()}`);
+
 		if (caller.stopped) {
 			return
 		}
@@ -154,8 +163,6 @@ class MotorController {
 			return
 		};
 
-		let now = Date.now();
-		let timediff = now - caller.last_pwm_inc_time;
 		if (error < caller.pid_domain && error > -1 * caller.pid_domain) {
 			let pid_output = caller.ctr.update(caller.curr_rotation_index);
 			let pwm_output = caller.pid_output_to_pwm(pid_output);

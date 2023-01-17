@@ -49,14 +49,6 @@ var app = express()
 	.get('/', (req, res) => {res.send('Hello World')})
 	.listen(port, () => {console.log(`Listening on port ${port}`)});
 
-const pwm_pin_numbers = [6,13,19,26,12,16];
-const rotation_pin_number = 20;
-const direction_pin_number = 21;
-const enable_pin_number = 7;
-const emergency_brake_pin_number = 5; 
-var motorController = new MotorController(pwm_pin_numbers, rotation_pin_number, direction_pin_number, enable_pin_number, emergency_brake_pin_number);
-
-
 function send_to_frontend(object) {
 	frontend_ws.send(JSON.stringify(object));
 }
@@ -88,3 +80,16 @@ function controller_set_pid_values(valueObj) {
 function controller_get_pid_values() {
 	return motorController.get_pid_values();
 }
+
+function distance_to_frontend(int_distance) {
+	send_to_frontend({command: "curr_dist", value: int_distance});
+}
+
+const pwm_pin_numbers = [6,13,19,26,12,16];
+const rotation_pin_number = 20;
+const direction_pin_number = 21;
+const enable_pin_number = 7;
+const emergency_brake_pin_number = 5; 
+var motorController = new MotorController(pwm_pin_numbers, rotation_pin_number, direction_pin_number, enable_pin_number, emergency_brake_pin_number, distance_to_frontend);
+
+

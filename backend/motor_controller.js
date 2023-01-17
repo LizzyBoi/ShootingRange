@@ -37,10 +37,10 @@ class MotorController {
 		this.accel_time_ms = 50;
 		this.last_pwm_inc_time = Date.now();
 		this.ctr = new PidController({
-			k_p: 0.04, 
-			k_i: 0.025, 
-			k_d: 0.006, 
-			i_max: 10
+			k_p: 0.065, 
+			k_i: 0.01, 
+			k_d: 0.00, 
+			i_max: 5
 		});
 		this.interval = setInterval(this.controller_update.bind({"caller": this}), 25); 
 

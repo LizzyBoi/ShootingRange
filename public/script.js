@@ -6,14 +6,18 @@ let ws;
 		msg_obj = JSON.parse(wsMessage.data);
 		
 		if(msg_obj.command === "range_data") {
+			let last_position = document.getElementById("positionSlider").value;
 			document.getElementById("positionSlider").value = msg_obj.value.dist;
 			document.getElementById("motorDir").value = msg_obj.value.dir;
+			if(last_position != document.getElementById("positionSlider").value){
+				document.getElementById("movementCheck").value = 1
+			} else{
+				document.getElementById("movementCheck").value = 0
+			}
 			// here motorDir is just a hidden input value in the html code that keeps track of direction with 1=forward -1=backward 0=still
 			updateDir()
-		} else if(msg_obj.command === "lerp") {
-			document.getElementById("lerpValue").innerHTML = msg_obj.value
-			document.getElementById("lerpTempSlider").innerHTML = msg_obj.value
-		} else if(msg_obj.command === "pid_values") {
+		}
+		 else if(msg_obj.command === "pid_values") {
 			document.getElementById("PID_p").value = msg_obj.value.k_p;
 			document.getElementById("PID_i").value = msg_obj.value.k_i;
 			document.getElementById("PID_d").value = msg_obj.value.k_d;
@@ -99,15 +103,15 @@ function incrementDir(dir){
 }
 
 function updateDir(){
-	if(parseInt(document.getElementById("motorDir").value) === 1){
+	if(document.getElementById("movementCheck").value === 0){
+		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #d1d5db';
+		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #d1d5db';
+	} else if(parseInt(document.getElementById("motorDir").value) === 1){
 		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #FF4C29';
 		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #d1d5db';
-	} else if (parseInt(document.getElementById("motorDir").value) === -1){
+	} else if (parseInt(document.getElementById("motorDir").value) === 0){
 		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #FF4C29';
 		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #d1d5db';
-	} else {
-		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #d1d5db';
-		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #d1d5db';
 	}
 }
 

@@ -3,23 +3,22 @@ let ws;
 	ws = await connectToServer();
 
 	ws.onmessage = (wsMessage) => {
-		console.log(wsMessage.data);
 		msg_obj = JSON.parse(wsMessage.data);
-
-		console.log(msg_obj);
 		
 		if(msg_obj.command === "rot") {
-			console.log(msg_obj.value);
 			document.getElementById("positionValue").innerText = msg_obj.value;
 		} else if(msg_obj.command === "dir"){
-			console.log(msg_obj.value);
 			document.getElementById("motorDir").value = msg_obj.value;
 			// here motorDir is just a hidden input value in the html code that keeps track of direction with 1=forward -1=backward 0=still
 			updateDir()
 		} else if(msg_obj.command === "lerp") {
-			console.log(msg_obj.value);
 			document.getElementById("lerpValue").innerHTML = msg_obj.value
 			document.getElementById("lerpTempSlider").innerHTML = msg_obj.value
+		} else if(msg_obj.command === "pid_values") {
+			document.getElementById("PID_p").value = msg_obj.value.k_p;
+			document.getElementById("PID_i").value = msg_obj.value.k_i;
+			document.getElementById("PID_d").value = msg_obj.value.k_d;
+			document.getElementById("PID_i_max").value = msg_obj.value.i_max;
 		}
 	};
 
@@ -44,7 +43,7 @@ window.onload = function(){
             document.getElementById("speedInputButton").click();
         }
     });
-	document.getElementById("positionInput")
+    document.getElementById("positionInput")
     .addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {

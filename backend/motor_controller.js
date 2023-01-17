@@ -18,7 +18,7 @@ class MotorController {
 		this.curr_duty_cycle = 32;
 
 		this.pulse_per_rotation = 2;
-		this.rotation_per_cm = 7.5;
+		this.rotation_per_cm = 7.175;
 		this.pulse_per_cm = this.pulse_per_rotation * this.rotation_per_cm;
 		this.deceleration_rotation_distance = 5 * this.pulse_per_cm;
 		this.moving_leeway = 0.2 * this.pulse_per_cm;
@@ -33,15 +33,16 @@ class MotorController {
 		this.upper_dead = 36;
 
 		this.stopped = 1;
-		this.pid_domain = 10 * this.pulse_per_cm;
-		this.accel_time_ms = 20;
+		this.pid_domain = 20 * this.pulse_per_cm;
+		this.accel_time_ms = 50;
 		this.last_pwm_inc_time = Date.now();
 		this.ctr = new PidController({
-			k_p: 0.20, 
-			k_i: 0.01, 
-			k_d: 0.01, 
-			i_max: 10});
-		this.interval = setInterval(this.controller_update.bind({"caller": this}), 100); 
+			k_p: 0.04, 
+			k_i: 0.025, 
+			k_d: 0.006, 
+			i_max: 10
+		});
+		this.interval = setInterval(this.controller_update.bind({"caller": this}), 25); 
 
 		this.set_duty_cycle(32);
 
@@ -56,6 +57,12 @@ class MotorController {
 		this.ctr.k_i = values.k_i
 		this.ctr.k_d = values.k_d
 		this.ctr.i_max = values.i_max
+
+		console.log("updated pid values");
+	}
+
+	get_pid_values() {
+		return {k_p: this.ctr.k_p, k_i: this.ctr.k_i, k_d: this.ctr.k_d, i_max: this.ctr.i_max}
 	}
 
 	start() {
@@ -113,10 +120,11 @@ class MotorController {
 	}
 
 	write_pwm_duty_cycle(duty_cycle) {
+		let duty_cycle_int = Math.ceil(duty_cycle)
 		for (let i = 0; i < this.pwm_pins.length; i++) {
 			const mask = 1 << i;
 
-			if (duty_cycle & mask) {
+			if (duty_cycle_int & mask) {
 				this.pwm_pins[i].writeSync(1);
 			} else {
 				this.pwm_pins[i].writeSync(0);
@@ -126,24 +134,26 @@ class MotorController {
 
 	controller_update() {
 		let caller = this.caller;
-		if (caller.stopped) return;
+		if (caller.stopped) {
+			return
+		}
 		let error = caller.end_rotation_index - caller.curr_rotation_index;
 
-		if (error < 3 && error > -3) {
-			console.log("at position");
+		if (error < 2 && error > -2) {
 			caller.set_duty_cycle(32);
+			console.log(`duty_cycle ${caller.curr_duty_cycle} rotation_index ${caller.curr_rotation_index} distance ${caller.curr_rotation_index/caller.pulse_per_cm}`);
+			console.log(`sumError: ${caller.ctr.sumError}`);
+			console.log(`lastError: ${caller.ctr.lastError}`);
+			console.log(`lastTime: ${caller.ctr.lastTime}`);
 			return
 		};
 
 		if (error < caller.pid_domain && error > -1 * caller.pid_domain) {
-			console.log("pid");
 			let input = caller.ctr.update(caller.curr_rotation_index);
 			caller.pid_output_to_pwm(input);
 		} else {
-			console.log("cool amazing stuff");
 			let now = Date.now()
 			let timediff = now - caller.last_pwm_inc_time;
-			console.log(`timediff ${timediff}`);
 			if (timediff > caller.accel_time_ms) {
 				if (error > 0) {
 					caller.change_duty_cycle(1);
@@ -155,6 +165,9 @@ class MotorController {
 			}
 		}
 		console.log(`duty_cycle ${caller.curr_duty_cycle} rotation_index ${caller.curr_rotation_index} distance ${caller.curr_rotation_index/caller.pulse_per_cm}`);
+		console.log(`sumError: ${caller.ctr.sumError}`);
+		console.log(`lastError: ${caller.ctr.lastError}`);
+		console.log(`lastTime: ${caller.ctr.lastTime}`);
 	}
 
 	pid_output_to_pwm(pid_output) {

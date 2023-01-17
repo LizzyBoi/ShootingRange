@@ -14,6 +14,8 @@ ws_server.on('connection', (ws) => {
 	console.log('New client connected');
 
 	frontend_ws = ws;
+	ws.send(JSON.stringify({command: "pid_values", value: controller_get_pid_values()}));
+
 	ws.on('message', (messageString) => {
 		const message = JSON.parse(messageString);
 
@@ -81,4 +83,8 @@ function controller_stop() {
 
 function controller_set_pid_values(valueObj) {
 	motorController.set_pid_values(valueObj);
+}
+
+function controller_get_pid_values() {
+	return motorController.get_pid_values();
 }

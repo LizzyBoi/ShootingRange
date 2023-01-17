@@ -14,7 +14,6 @@ let ws;
 			} else{
 				document.getElementById("movementCheck").value = 0
 			}
-			// here motorDir is just a hidden input value in the html code that keeps track of direction with 1=forward -1=backward 0=still
 			updateDir()
 		}
 		 else if(msg_obj.command === "pid_values") {
@@ -103,7 +102,7 @@ function incrementDir(dir){
 }
 
 function updateDir(){
-	if(document.getElementById("movementCheck").value === 0){
+	if(document.getElementById("movementCheck").value === -1){
 		document.getElementById("triDirUp").style.borderColor = 'transparent transparent #d1d5db';
 		document.getElementById("triDirDown").style.borderColor = 'transparent transparent #d1d5db';
 	} else if(parseInt(document.getElementById("motorDir").value) === 1){

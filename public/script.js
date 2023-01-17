@@ -6,7 +6,7 @@ let ws;
 		msg_obj = JSON.parse(wsMessage.data);
 		
 		if(msg_obj.command === "curr_dist") {
-			document.getElementById("positionValue").innerText = msg_obj.value;
+			document.getElementById("positionSlider").value = msg_obj.value;
 		} else if(msg_obj.command === "dir"){
 			document.getElementById("motorDir").value = msg_obj.value;
 			// here motorDir is just a hidden input value in the html code that keeps track of direction with 1=forward -1=backward 0=still

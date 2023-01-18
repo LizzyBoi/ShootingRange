@@ -43,22 +43,22 @@
 	</div>
 	</div>
 	<div class="PWMControl">
-	<div>
-		<input type="range" class="slider speedSlider" min="1" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput('set', 'currentSpeed', 'speedSlider')" hidden>
-		<p id="currentSpeed" class="speedText" hidden>32</p>
-		<div hidden>
-			<label class="generalText" for="fname">Set current position:</label><br>
-			<br>
-			<input class="arrowlessSubmit" type="number" id="speedInput"><br>
-			<input type="button" onclick="updateSubmit('speedInput', 'currentSpeed', 'speedSlider', 1, 63, 'set')" value="update" class="button" id="speedInputButton">
-		</div>
 		<div>
-			<label class="generalText" for="fname">Set current position:</label><br>
-			<br>
-			<input class="arrowlessSubmit" type="number" id="calibrateInput"><br>
-			<input type="button" onclick="calibratePosition(0, 90)" value="update" class="button" id="calibrateButton">
+			<input type="range" class="slider speedSlider" min="1" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput('set', 'currentSpeed', 'speedSlider')" hidden>
+			<p id="currentSpeed" class="speedText" hidden>32</p>
+			<div hidden>
+				<label class="generalText" for="fname">pwm control:</label><br>
+				<br>
+				<input class="arrowlessSubmit" type="number" id="speedInput"><br>
+				<input type="button" onclick="updateSubmit('speedInput', 'currentSpeed', 'speedSlider', 1, 63, 'set')" value="update" class="button" id="speedInputButton">
+			</div>
+			<div>
+				<label class="generalText" for="fname">Set current position:</label><br>
+				<br>
+				<input class="arrowlessSubmit" type="number" id="calibrateInput"><br>
+				<input type="button" onclick="calibratePosition(0, 90)" value="update" class="button" id="calibrateButton">
+			</div>
 		</div>
-	</div>
 		<input type="button" class="button halt" value="Halt" onclick="halt()" hidden>
     </div>
 <!-- hidden values -->

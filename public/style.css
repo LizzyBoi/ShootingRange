@@ -4,7 +4,7 @@ body{
 
 .PWMControl {
   position: absolute;
-  transform: translate(250px, -400px);
+  transform: translate(250px, -399px);
 }
 
 p {

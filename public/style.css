@@ -136,6 +136,7 @@ datalist {
   background-color: transparent;
 }
 
+/*
 .triButtonUp:hover{
   border-color:transparent transparent #FF4C29;
 }
@@ -143,6 +144,7 @@ datalist {
 .triButtonDown:hover{
   border-color:transparent transparent #FF4C29;
 }
+*/
 .positionControl{
   height: 418px;
   

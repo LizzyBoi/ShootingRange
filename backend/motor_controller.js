@@ -19,7 +19,7 @@ class MotorController {
 		this.curr_duty_cycle = 32;
 
 		this.pulse_per_rotation = 2;
-		this.rotation_per_cm = 7.175;
+		this.rotation_per_cm = 7.15;
 		this.pulse_per_cm = this.pulse_per_rotation * this.rotation_per_cm;
 		this.deceleration_rotation_distance = 5 * this.pulse_per_cm;
 		this.moving_leeway = 0.2 * this.pulse_per_cm;
@@ -36,7 +36,7 @@ class MotorController {
 
 		this.stopped = 1;
 		this.pid_domain = 20 * this.pulse_per_cm;
-		this.accel_time_ms = 50;
+		this.accel_time_ms = 200;
 		this.last_pwm_inc_time = Date.now();
 		this.ctr = new PidController({
 			k_p: 0.065, 
@@ -125,7 +125,7 @@ class MotorController {
 		}
 
 
-		//console.log(`rotation: ${caller.curr_rotation_index}`);
+		console.log(`rotation: ${caller.curr_rotation_index}`);
 	}
 
 	write_pwm_duty_cycle(duty_cycle) {
@@ -217,6 +217,14 @@ class MotorController {
 		}
 
 		return offset;
+	}
+
+	calibrate_distance(distance_cm) {
+		let distance_pulse = distance_cm * this.pulse_per_cm;
+		let this.curr_rotation_index = Math.floor(distance_pulse);
+
+		let int_distance = Math.round(this.curr_rotation_index / this.pulse_per_cm);
+		this.distance_callback({dist: int_distance, dir: -1});
 	}
 }
 

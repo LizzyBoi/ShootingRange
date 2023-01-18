@@ -38,6 +38,9 @@ ws_server.on('connection', (ws) => {
 		} else if (message.command === "set_pid_values") {
 			console.log("set_pid_values");
 			controller_set_pid_values(message.value);
+		} else if (message.command === "calibrate") {
+			console.log("calibrate");
+			calibrate_controller(message.value);
 		}
 	});
 
@@ -87,6 +90,10 @@ function distance_to_frontend(int_distance) {
 	const message = {command: "range_data", value: int_distance}
 	//console.log(message);
 	send_to_frontend(message);
+}
+
+function calibrate_controller(distance_cm) {
+	motorController.calibrate_distance(distance_cm);
 }
 
 const pwm_pin_numbers = [6,13,19,26,12,16];

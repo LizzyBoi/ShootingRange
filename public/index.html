@@ -44,26 +44,32 @@
 	</div>
 	<div class="PWMControl">
 	<div>
-		<input type="range" class="slider speedSlider" min="1" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput('set', 'currentSpeed', 'speedSlider')">
-		<p id="currentSpeed" class="speedText">32</p>
-	
-		<div>
-			<label class="generalText" for="fname">Pick Discrete Speed:</label><br>
+		<input type="range" class="slider speedSlider" min="1" max="63" id="speedSlider" value="32" step="1" orient="vertical" oninput="onSliderInput('set', 'currentSpeed', 'speedSlider')" hidden>
+		<p id="currentSpeed" class="speedText" hidden>32</p>
+		<div hidden>
+			<label class="generalText" for="fname">Set current position:</label><br>
 			<br>
 			<input class="arrowlessSubmit" type="number" id="speedInput"><br>
 			<input type="button" onclick="updateSubmit('speedInput', 'currentSpeed', 'speedSlider', 1, 63, 'set')" value="update" class="button" id="speedInputButton">
 		</div>
+		<div>
+			<label class="generalText" for="fname">Set current position:</label><br>
+			<br>
+			<input class="arrowlessSubmit" type="number" id="calibrateInput"><br>
+			<input type="button" onclick="calibratePosition(0, 90)" value="update" class="button" id="calibrateButton">
+		</div>
 	</div>
-		<input type="button" class="button halt" value="Halt" onclick="halt()">
+		<input type="button" class="button halt" value="Halt" onclick="halt()" hidden>
     </div>
 <!-- hidden values -->
 	<input type="hidden" id="motorDir" value="0">
 	<input type="hidden" id="targetPosition" value="0">
 	<input type="hidden" id="currentPwm" value="0">
 	<input type="hidden" id="movementCheck" value="">
+	<p id="calibrateValue" hidden>0</p>
 
 <!-- PID Controllers-->
-	<div class="pidController">
+	<div class="pidController" hidden>
 		<p class="PID_text">Grandma no touchy touchy (PID parameters):	</p>
 		<p class="PID_text">PID_p:</p>
 		<input type="number" value="0.04" step="0.01" id="PID_p" onchange="PID_onchange()">

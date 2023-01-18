@@ -46,6 +46,13 @@ window.onload = function(){
             document.getElementById("positionSubmitButton").click();
         }
     });
+	document.getElementById("calibrateInput")
+    .addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("calibrateButton").click();
+        }
+    });
 };
 
 function updateSubmit(input, id, slider, min, max, command){
@@ -59,6 +66,17 @@ function updateSubmit(input, id, slider, min, max, command){
     	sendPublicToSocket(command, id)
     } else {
         document.getElementById(input).value = "";   
+    }
+}
+
+function calibratePosition(min, max){
+    if(document.getElementById('calibrateInput').value >= min && document.getElementById('calibrateInput').value <= max){
+        document.getElementById('calibrateValue').innerHTML = document.getElementById('calibrateInput').value;
+        document.getElementById('calibrateInput').value = "";  
+		console.log(`Current calibrateValue ${document.getElementById('calibrateValue').innerHTML}`);
+    	sendPublicToSocket('calibrate', 'calibrateValue')
+    } else {
+        document.getElementById('calibrateInput').value = "";   
     }
 }
 
